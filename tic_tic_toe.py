@@ -1,5 +1,4 @@
 """Simple game of noughts and crosses for 2 players"""
-from IPython.display import clear_output
 from random import randint
 
 # set game variables
