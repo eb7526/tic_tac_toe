@@ -1,5 +1,6 @@
 """Simple game of noughts and crosses for 2 players"""
-
+from IPython.display import clear_output
+from random import randint
 
 # set game variables
 already_used = []
@@ -10,15 +11,16 @@ game_state = True
 
 def display_input_positions():
     # Shows player at start of game the reference positions on the game board.
+    display_board(reference_position)
     print('\n-------------------')
     print('Input positions')
     print('-------------------\n')
-    display_board(reference_position)
     print('\n')
 
 
 def display_board(game_list):
     # Displays the current game board to the user.
+    print('\n' * 100)
     print(f'\n  {game_list[0]}  |', f'{game_list[1]} |', f' {game_list[2]} ')
     print(f'---------------')
     print(f'  {game_list[3]}  |', f'{game_list[4]} |', f' {game_list[5]} ')
@@ -40,7 +42,6 @@ def intro():
         else:
             player_2 = 'x'
     display_input_positions()
-    print(f"{player_1_name} will go first")
     return player_1_name, player_1, player_2_name, player_2
 
 
@@ -83,16 +84,20 @@ def reset_game_data():
 
 
 def run_game():
-    turn = True
+    turn = randint(0, 1)
+    if turn:
+        print(player_1_name + ' will go first')
+    else:
+        print(player_2_name + ' will go first')
     global game_state
-    while len(already_used) < 9 and game_state:
+    while game_state:
         try:
             if turn:
                 position = int(
-                input(f'{player_1_name} select next position (1-9). Type any letter to quit: '))
+                    input(f'{player_1_name} select next position (1-9). Type any letter to quit: '))
             else:
                 position = int(
-                input(f'{player_2_name} select next position (1-9). Type any letter to quit: '))
+                    input(f'{player_2_name} select next position (1-9). Type any letter to quit: '))
         except ValueError:
             game_state = False
             print('Thanks for playing!!')
@@ -108,8 +113,10 @@ def run_game():
                 else:
                     sample[position - 1] = player_2
             display_board(sample)
-            if game_winner():
-                if turn:
+            if game_winner() or len(already_used) == 9:
+                if len(already_used) == 9:
+                    print(f'Tied game!')
+                elif turn:
                     print(f'Well done, {player_1_name} wins!')
                 else:
                     print(f'Well done, {player_2_name} wins!')
